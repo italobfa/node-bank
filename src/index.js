@@ -9,13 +9,17 @@ const clients = []
 
 app.post("/account", (request, response) => {
   const {cpf,name} = request.body
+  //buscando no array clients, se o cpf cadastrado ja existe.
+  const clientAlreadyExists = clients.some( client => client.cpf === cpf)
 
-  const id = uuidv4()
-  
+  if(clientAlreadyExists) {
+    return response.status(400).json({error: "Client already exists"})
+  }
+
   clients.push({
     cpf,
     name,
-    id,
+    id: uuidv4(),
     statement: []
   })
 
