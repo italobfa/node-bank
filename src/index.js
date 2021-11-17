@@ -9,7 +9,7 @@ const clients = []
 
 app.post("/account", (request, response) => {
   const {cpf,name} = request.body
-  //buscando no array clients, se o cpf cadastrado ja existe.
+  //buscando no array clients, se o cpf cadastrado ja existe ou nao.
   const clientAlreadyExists = clients.some( client => client.cpf === cpf)
 
   if(clientAlreadyExists) {
@@ -25,5 +25,13 @@ app.post("/account", (request, response) => {
 
   return response.status(201).send()
 });
+
+app.get("/statement/:cpf", (request, response) => {
+  const { cpf } = request.params;
+  //Procurando se existe o cpf passado no parametro, para poder retornar os dados necessarios, no caso o statement
+  const client = clients.find(client => client.cpf === cpf)
+
+  return response.json(client.statement)
+})
 
 app.listen(3333);
