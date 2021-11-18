@@ -45,40 +45,54 @@ ou passar direto na rota, e somente aquela rota irá usar o middleware.
 app.use(verifyIfAccountExistsCPF)*/
 
 app.get("/statement", verifyIfAccountExistsCPF, (request, response) => {
-  const {client} = request
+  const { client } = request;
   return response.json(client.statement);
 });
 
 app.post("/deposit", verifyIfAccountExistsCPF, (request, response) => {
-  const {client} = request
-  const { description, amount } = request.body
+  const { client } = request;
+  const { description, amount } = request.body;
 
   const deposit = {
     description,
     amount,
-    creatAT: new Date(),
-    type: 'deposit'
-  }
+    createdAt: new Date(),
+    type: "deposit",
+  };
 
-  client.statement.push(deposit)
+  client.statement.push(deposit);
 
-  return response.status(201).json(client.statement)
-})
+  return response.status(201).json(client.statement);
+});
 
 app.post("/withdraw", verifyIfAccountExistsCPF, (request, response) => {
-  const {client} = request
-  const { description, amount } = request.body
+  const { client } = request;
+  const { description, amount } = request.body;
 
   const withdraw = {
     description,
     amount,
-    creatAT: new Date(),
-    type: 'withdraw'
-  }
+    createdAt: new Date(),
+    type: "withdraw",
+  };
 
-  client.statement.push(withdraw)
+  client.statement.push(withdraw);
 
-  return response.status(201).json(client.statement)
-})
+  return response.status(201).json(client.statement);
+});
+
+app.get("/statement/date", verifyIfAccountExistsCPF, (request, response) => {
+  const { client } = request;
+  const { date } = request.query;
+
+  const dateFormat = new Date(date + " 00:00");
+
+  const statement = client.statement.filter(
+    (statement) =>
+      statement.createdAt.toDateString() === new Date(dateFormat.toDateString())
+  );
+
+  return response.json(statement);
+});
 
 app.listen(3333);
