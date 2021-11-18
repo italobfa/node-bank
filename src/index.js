@@ -65,4 +65,20 @@ app.post("/deposit", verifyIfAccountExistsCPF, (request, response) => {
   return response.status(201).json(client.statement)
 })
 
+app.post("/withdraw", verifyIfAccountExistsCPF, (request, response) => {
+  const {client} = request
+  const { description, amount } = request.body
+
+  const withdraw = {
+    description,
+    amount,
+    creatAT: new Date(),
+    type: 'withdraw'
+  }
+
+  client.statement.push(withdraw)
+
+  return response.status(201).json(client.statement)
+})
+
 app.listen(3333);
