@@ -95,4 +95,27 @@ app.get("/statement/date", verifyIfAccountExistsCPF, (request, response) => {
   return response.json(statement);
 });
 
+app.put("/account", verifyIfAccountExistsCPF, (request, response) => {
+  const { client } = request;
+  const { name } = request.body;
+
+  client.name = name;
+
+  return response.status(201).send();
+});
+
+app.get("/account", verifyIfAccountExistsCPF, (request, response) => {
+  const { client } = request;
+
+  return response.json(client);
+});
+
+app.delete("/account", verifyIfAccountExistsCPF, (request, response) => {
+  const { client } = request;
+
+  clients.splice(client, 1);
+
+  return response.status(200).json(clients);
+});
+
 app.listen(3333);
