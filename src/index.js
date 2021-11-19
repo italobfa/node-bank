@@ -21,6 +21,17 @@ function verifyIfAccountExistsCPF(request, response, next) {
   return next();
 }
 
+function getBalance(statement) {
+  const balance = statement.reduce((acc, operation) => {
+    if (operation.type === "deposit") {
+      return acc + operation.amount;
+    } else {
+      return acc - operation.amount;
+    }
+  }, 0);
+  return balance;
+}
+
 app.post("/account", (request, response) => {
   const { cpf, name } = request.body;
   //buscando no array clients, se o cpf cadastrado já existe ou não.
@@ -117,5 +128,13 @@ app.delete("/account", verifyIfAccountExistsCPF, (request, response) => {
 
   return response.status(200).json(clients);
 });
+
+app.get("/balance", verifyIfAccountExistsCPF, (request, response) =>{
+  const { client } = request;
+
+  const balance = getBalance(client.statement)
+
+  return response.json(balance)
+})
 
 app.listen(3333);
