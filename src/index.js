@@ -85,11 +85,11 @@ app.get("/statement/date", verifyIfAccountExistsCPF, (request, response) => {
   const { client } = request;
   const { date } = request.query;
 
-  const dateFormat = new Date(date + " 00:00");
+  const dateFormat = new Date(date);
 
   const statement = client.statement.filter(
     (statement) =>
-      statement.createdAt.toDateString() === new Date(dateFormat.toDateString())
+      statement.createdAt.toDateString() === new Date(dateFormat).toDateString()
   );
 
   return response.json(statement);
